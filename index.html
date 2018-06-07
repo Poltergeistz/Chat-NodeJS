@@ -9,26 +9,66 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
+<style>
+    /* CHAT BOX */
+
+.container{
+    padding: 10px;
+}
+
+.box{
+    width: 800px;
+}
+
+.control{
+    padding: 10px;
+}
+
+/* MESSAGE BOX */
+
+.input{
+    width: 200px;
+}
+
+/* TAG CONNECTED USERS */ 
+
+.tag{
+    width: 50px;
+}
+
+strong{
+    padding: 2px;
+}
+
+</style>
 
 <body>
     <div class="container">
         <div class="box">
             <div class="control">
                 <h1 class="title is-2">SuperChat</h1>
-                <div class="control">
-                    <h2 class="subtitle is-6"><strong>Online users :</strong> 0</h2>
+                <div class="control has-icons-left">
+                        <span class="tag is-warning"><i class="fas fa-user-secret"></i>
+                            <strong> : 0 </strong>
+                        </span>
                 </div>
-                <textarea autocomplete="off" class="textarea" rows="10"></textarea>
+                <textarea autocomplete="off" class="textarea" rows="10" id="chat"></textarea>
             </div>
 
             <div class="control">
-                <input class="input" type="text" placeholder="Ecrire un message...">
+                <input class="input" type="text" placeholder="Ecrire un message..." id="message">
                 <button class="button is-primary">Send</button>
             </div>
         </div>
     </div>
-
-
+    <script>
+        () => {
+            let socket = io.connect();
+            let message = document.getElementById('message')
+            let chat = document.getElementById('chat')
+        }
+    </script>
+    <script src="/node_modules/socket.io/lib/socket.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
 </body>
 
