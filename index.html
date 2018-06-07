@@ -61,12 +61,12 @@ strong{
             </div>
         </div>
     </div>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        () => {
-            let socket = io.connect();
+            let socket = io();
             let message = document.getElementById('message')
             let chat = document.getElementById('chat')
-        }
+        
     </script>
     <script src="/node_modules/socket.io/lib/socket.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
