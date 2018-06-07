@@ -1,3 +1,5 @@
+/* CHAT BOX */
+
 .container{
     padding: 10px;
 }
@@ -10,6 +12,20 @@
     padding: 10px;
 }
 
+/* MESSAGE BOX */
+
 .input{
     width: 200px;
 }
+
+/* TAG CONNECTED USERS */ 
+
+.tag{
+    width: 50px;
+}
+
+strong{
+    padding: 2px;
+}
+
+
