@@ -12,64 +12,146 @@
 <style>
     /* CHAT BOX */
 
-.container{
-    padding: 10px;
-}
+    .container {
+        padding: 10px;
+    }
 
-.box{
-    width: 800px;
-}
+    .box {
+        width: 800px;
+    }
 
-.control{
-    padding: 10px;
-}
+    .control {
+        padding: 10px;
+    }
 
-/* MESSAGE BOX */
+    #chat {
+        width: 760px;
+        height: 300px;
+        border: 2px solid black;
+    }
 
-.input{
-    width: 200px;
-}
+    /* MESSAGE BOX */
 
-/* TAG CONNECTED USERS */ 
+    .input {
+        width: 200px;
+    }
 
-.tag{
-    width: 50px;
-}
+    .well {
+        background-color: #e2e2e2;
+        border: 2px #d1d1d1;
+        border-radius: 1px;
+        font-size: 20px;
+        font-family: sans-serif;
+    }
 
-strong{
-    padding: 2px;
-}
+    /* TAG CONNECTED USERS */
 
+    .tag {
+        width: 50px;
+    }
+
+    strong {
+        padding: 2px;
+    }
+
+   /* #messageArea {
+        display: none;
+    } */
+
+   /* .hour{
+    } */
 </style>
 
 <body>
+
+    <!-- USER BOX LOGIN -->
     <div class="container">
-        <div class="box">
+        <div id="userFormArea" class="box">
+            <form id="userForm">
+                <input id="username" class="input" type="text" placeholder="Choisir un pseudo">
+                <button class="button is-primary">Login</button>
+            </form>
+        </div>
+
+        <!-- MESSAGE BOX AREA -->
+        <div id="messageArea" class="box">
             <div class="control">
-                <h1 class="title is-2">SuperChat</h1>
-                <div class="control has-icons-left">
-                        <span class="tag is-warning"><i class="fas fa-user-secret"></i>
-                            <strong> : 0 </strong>
-                        </span>
+                <h1 class="title is-2">Super_Chat</h1>
+                <div class="well">
+                    <!-- USER COUNTER -->
+                    <h3>Online users</h3>
+                    <ul class="list-group" id="users"></ul>
                 </div>
-                <textarea autocomplete="off" class="textarea" rows="10" id="chat"></textarea>
+            </div>
+            <div class="control has-icons-left">
+                <span class="tag is-warning">
+                    <i class="fas fa-user-secret"></i>
+                    <strong> : 0 </strong>
+                </span>
             </div>
 
-            <div class="control">
-                <input class="input" type="text" placeholder="Ecrire un message..." id="message">
-                <button class="button is-primary">Send</button>
-            </div>
+            <!-- CHAT BOX -->
+            <div id="chat" class="chat"></div>
+
+            <!-- MESSAGE TYPING BOX -->
+            <form id="messageForm">
+                <div class="control">
+                    <input id="msg" type="textarea" placeholder="Ecrire un message..."></input>
+                    <button class="button is-small is-primary">Envoyer</button>
+                </div>
+            </form>
         </div>
-    </div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-            let socket = io();
-            let message = document.getElementById('message')
-            let chat = document.getElementById('chat')
-        
-    </script>
-    <script src="/node_modules/socket.io/lib/socket.js"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+        <script>
+            $(function () {
+                var socket = io.connect();
+                var $messageArea = $('MessageArea');
+                var $messageForm = $('#messageForm');
+                var $message = $('#msg');
+                var $chat = $('#chat');
+                var $userFormArea = $('#userFormArea');
+                var $userForm = $('#userForm');
+                var $users = $('#users');
+                var $username = $('#username');
+
+                /* GRABING VALUE FROM MESSAGE */
+                $messageForm.submit(function (e) {
+                    e.preventDefault();
+                    socket.emit('send message', $message.val());
+                    $message.val('')
+                });
+
+                /* DISPLAY MESSAGE INSIDE CHATBOX */
+                socket.on('new message', function (data) {
+                    $chat.append('<div class="well"><strong>' + data.user + ': ' + '</strong>' + data.msg + '</div>' + '<span class="hour">'+ data.hour + '</span>');
+                })
+
+                /* IF USER SUBMIT AN USERNAME SHOW CHAT BOX */
+                $userForm.submit(function (e) {
+                    e.preventDefault();
+                    socket.emit('new user', $username.val(), function (data) {
+                        if (data) {
+                            $userFormArea.hide();
+                            $messageArea.show();
+                        }
+                    });
+                    $username.val('');
+                });
+
+                /* USER NAME LIST */
+                socket.on('get users', function (data) {
+                    var html = '';
+                    for (i = 0; i < data.length; i++) {
+                        html += '<li class="list-group-item">' + data[i] + '</li>'
+                    }
+                    $users.html(html);
+                })
+            });
+        </script>
 </body>
 
 </html>
